@@ -10,6 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
+				"fileName": "products_clean.csv",
 				"container": "silver"
 			},
 			"columnDelimiter": ",",

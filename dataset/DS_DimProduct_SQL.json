@@ -1,5 +1,5 @@
 {
-	"name": "DS_FactWarranty_SQL",
+	"name": "DS_DimProduct_SQL",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "LS_SQL",
@@ -9,26 +9,30 @@
 		"type": "AzureSqlTable",
 		"schema": [
 			{
-				"name": "claim_id",
+				"name": "product_id",
 				"type": "varchar"
 			},
 			{
-				"name": "claim_date",
+				"name": "product_name",
+				"type": "varchar"
+			},
+			{
+				"name": "category_id",
+				"type": "varchar"
+			},
+			{
+				"name": "price",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "launch_date",
 				"type": "date"
-			},
-			{
-				"name": "sale_id",
-				"type": "varchar"
-			},
-			{
-				"name": "repair_status",
-				"type": "varchar"
 			}
 		],
 		"typeProperties": {
 			"schema": "dbo",
-			"table": "fact_warranty"
+			"table": "dim_product"
 		}
-	},
-	"type": "Microsoft.DataFactory/factories/datasets"
+	}
 }
