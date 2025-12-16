@@ -1,0 +1,17 @@
+{
+	"name": "DS_FactWarranty_SQL",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_SQL",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "fact_warranty"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

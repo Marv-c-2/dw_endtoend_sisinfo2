@@ -1,0 +1,71 @@
+{
+	"name": "DF_Stores_Bronze",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_Stores_Bronze",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DS_Stores_Silver",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "select1"
+				},
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "filter1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          Store_ID as string,",
+				"          Store_Name as string,",
+				"          City as string,",
+				"          Country as string,",
+				"          opened as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source1 select(mapColumn(",
+				"          store_id = Store_ID,",
+				"          store_name = Store_Name,",
+				"          city = City,",
+				"          country = Country,",
+				"          opened_year = opened",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 derive(store_id_clean = trim(store_id),",
+				"          store_name_clean = trim(replace(replace(store_name, \"'\", ''), '\"', '')),",
+				"          city_clean = trim(replace(replace(city, \"'\", ''), '\"', '')),",
+				"          country_clean = trim(replace(replace(country, \"'\", ''), '\"', '')),",
+				"          opened_clean = iif( isNull(opened_year) || !isInteger(opened_year, '####', 'en-US'), toInteger('0', '####', 'en-US'), toInteger(opened_year, '####', 'en-US') )) ~> derivedColumn1",
+				"derivedColumn1 filter(isNull(store_id_clean) == false() &&",
+				"isNull(store_name_clean) == false() &&",
+				"isNull(city_clean) == false() &&",
+				"isNull(country_clean) == false()) ~> filter1",
+				"filter1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
+			]
+		}
+	}
+}

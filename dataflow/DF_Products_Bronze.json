@@ -1,0 +1,74 @@
+{
+	"name": "DF_Products_Bronze",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_Products_Bronze",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DS_Products_Silver",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "select1"
+				},
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "filter1"
+				},
+				{
+					"name": "derivedColumn2"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          Product_ID as string,",
+				"          Product_Name as string,",
+				"          Category_ID as string,",
+				"          Launch_Date as string,",
+				"          Price as string,",
+				"          notes as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source1 select(mapColumn(",
+				"          product_id = Product_ID,",
+				"          product_name = Product_Name,",
+				"          category_id = Category_ID,",
+				"          launch_date = Launch_Date,",
+				"          price = Price,",
+				"          notes",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"derivedColumn2 derive(product_id_clean = trim(product_id),",
+				"          price_clean = replace(replace(replace(price, '$',''),',',''),'.',''),",
+				"          launch_date_clean = toTimestamp(launch_date_normalized, 'yyyy-MM-dd')) ~> derivedColumn1",
+				"derivedColumn1 filter(isNull(product_id_clean) == false() &&\r",
+				"isNull(price_clean) == false() &&\r",
+				"isNull(launch_date_clean) == false()) ~> filter1",
+				"select1 derive(launch_date_normalized = replace(replace(replace(launch_date, '/', '-'), '.', '-'), ' ', '-')) ~> derivedColumn2",
+				"filter1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
+			]
+		}
+	}
+}
