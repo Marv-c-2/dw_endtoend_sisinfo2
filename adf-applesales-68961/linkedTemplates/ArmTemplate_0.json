@@ -717,7 +717,7 @@
 						"          notes as string,",
 						"          launch_date_normalized as date,",
 						"          product_id_clean as string,",
-						"          price_clean as string,",
+						"          price_clean as double,",
 						"          launch_date_clean as timestamp",
 						"     ),",
 						"     allowSchemaDrift: true,",
@@ -1114,20 +1114,7 @@
 					{
 						"name": "Warranty",
 						"type": "ExecuteDataFlow",
-						"dependsOn": [
-							{
-								"activity": "Products",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "Stores",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
+						"dependsOn": [],
 						"policy": {
 							"timeout": "0.12:00:00",
 							"retry": 0,
