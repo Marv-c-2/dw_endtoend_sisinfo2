@@ -20,29 +20,26 @@ provider "azurerm" {
   tenant_id       = var.tenant_id
 }
 
-# Genera un número aleatorio para evitar conflictos en los nombres de recursos
 resource "random_integer" "suffix" {
   min = 10000
-  max = 99999 
+  max = 99999
 }
 
 # -----------------------------------------------------------------------------
 # 1. INFRAESTRUCTURA BASE
 # -----------------------------------------------------------------------------
 
-# Resource Group
 resource "azurerm_resource_group" "rg" {
-  name     = "rg-dwventas-examen-${random_integer.suffix.result}"
+  name     = "rg-apple-sales-${random_integer.suffix.result}"
   location = "chilecentral"
 }
 
 # -----------------------------------------------------------------------------
-# 2. DATA LAKE STORAGE (AZURE DATA LAKE GEN2) - Capas Bronze, Silver, Gold
+# 2. DATA LAKE STORAGE (Bronze, Silver, Gold)
 # -----------------------------------------------------------------------------
 
-# Storage Account (Habilita Data Lake Gen2 con is_hns_enabled = true)
 resource "azurerm_storage_account" "sa" {
-  name                     = "sadwventasdelta${random_integer.suffix.result}"
+  name                     = "adlsapplesales${random_integer.suffix.result}"
   resource_group_name      = azurerm_resource_group.rg.name
   location                 = azurerm_resource_group.rg.location
   account_tier             = "Standard"
@@ -50,89 +47,58 @@ resource "azurerm_storage_account" "sa" {
   is_hns_enabled           = true
 }
 
-# Contenedor BRONZE (Datos Crudos)
-resource "azurerm_storage_container" "raw_advent" {
-  name                  = "bronze-advent"
+resource "azurerm_storage_container" "bronze" {
+  name                  = "bronze"
   storage_account_name  = azurerm_storage_account.sa.name
   container_access_type = "blob"
 }
 
-# Contenedor SILVER (Datos Limpios y Transformados)
-resource "azurerm_storage_container" "silver_advent" {
-  name                  = "silver-advent"
+resource "azurerm_storage_container" "silver" {
+  name                  = "silver"
   storage_account_name  = azurerm_storage_account.sa.name
   container_access_type = "blob"
 }
 
-# Contenedor GOLD (Datos Finales para Reporte si usas Synapse/Databricks)
-resource "azurerm_storage_container" "gold_advent" {
-  name                  = "gold-advent"
+resource "azurerm_storage_container" "gold" {
+  name                  = "gold"
   storage_account_name  = azurerm_storage_account.sa.name
   container_access_type = "blob"
 }
 
 # -----------------------------------------------------------------------------
-# 3. CARGA DE ARCHIVOS CSV (Capa Bronze)
+# 3. CARGA DE ARCHIVOS CSV (Bronze)
 # -----------------------------------------------------------------------------
 
-# ATENCIÓN: Asegúrate de que los archivos existan en un directorio local llamado 'data/'
-# donde ejecutas 'terraform apply'.
-
-resource "azurerm_storage_blob" "clientes_csv" {
-  name                   = "Clientes.csv"
+resource "azurerm_storage_blob" "products_csv" {
+  name                   = "products.csv"
   storage_account_name   = azurerm_storage_account.sa.name
-  storage_container_name = azurerm_storage_container.raw_advent.name
+  storage_container_name = azurerm_storage_container.bronze.name
   type                   = "Block"
-  source                 = "./Dataset/Clientes.csv"
+  source                 = "./Dataset/products.csv"
 }
 
-resource "azurerm_storage_blob" "detalle_ventas_csv" {
-  name                   = "Detalle_ventas.csv"
+resource "azurerm_storage_blob" "stores_csv" {
+  name                   = "stores.csv"
   storage_account_name   = azurerm_storage_account.sa.name
-  storage_container_name = azurerm_storage_container.raw_advent.name
+  storage_container_name = azurerm_storage_container.bronze.name
   type                   = "Block"
-  source                 = "./Dataset/Detalle_ventas.csv"
+  source                 = "./Dataset/stores.csv"
 }
 
-resource "azurerm_storage_blob" "productos_csv" {
-  name                   = "Productos.csv"
+resource "azurerm_storage_blob" "warranty_csv" {
+  name                   = "warranty.csv"
   storage_account_name   = azurerm_storage_account.sa.name
-  storage_container_name = azurerm_storage_container.raw_advent.name
+  storage_container_name = azurerm_storage_container.bronze.name
   type                   = "Block"
-  source                 = "./Dataset/Productos.csv"
-}
-
-resource "azurerm_storage_blob" "productos_cat_mant_csv" {
-  name                   = "Productos_CAT_MANT.csv"
-  storage_account_name   = azurerm_storage_account.sa.name
-  storage_container_name = azurerm_storage_container.raw_advent.name
-  type                   = "Block"
-  source                 = "./Dataset/Productos_CAT_MANT.csv"
-}
-
-resource "azurerm_storage_blob" "clientes_bd_gen_csv" {
-  name                   = "Clientes_BD-GEN (1).csv"
-  storage_account_name   = azurerm_storage_account.sa.name
-  storage_container_name = azurerm_storage_container.raw_advent.name
-  type                   = "Block"
-  source                 = "./Dataset/Clientes_BD-GEN (1).csv"
-}
-
-resource "azurerm_storage_blob" "clientes_location_csv" {
-  name                   = "Clientes_location (1).csv"
-  storage_account_name   = azurerm_storage_account.sa.name
-  storage_container_name = azurerm_storage_container.raw_advent.name
-  type                   = "Block"
-  source                 = "./Dataset/Clientes_location (1).csv"
+  source                 = "./Dataset/warranty.csv"
 }
 
 # -----------------------------------------------------------------------------
-# 4. DATA WAREHOUSE (Capa Gold)
+# 4. DATA WAREHOUSE (SQL Server + DW_APPLE)
 # -----------------------------------------------------------------------------
 
-# SQL Server
-resource "azurerm_mssql_server" "db" {
-  name                         = "sql-dwventas-advent-${random_integer.suffix.result}"
+resource "azurerm_mssql_server" "sql" {
+  name                         = "sqlserverapplesales${random_integer.suffix.result}"
   resource_group_name          = azurerm_resource_group.rg.name
   location                     = azurerm_resource_group.rg.location
   version                      = "12.0"
@@ -140,40 +106,33 @@ resource "azurerm_mssql_server" "db" {
   administrator_login_password = var.admin_password
 }
 
-# Regla de Firewall para permitir la conexión desde Azure services (requerido por ADF)
-resource "azurerm_mssql_firewall_rule" "rulefirewall" {
-  name             = "AllowAzureServicesAndIP"
-  server_id        = azurerm_mssql_server.db.id
+resource "azurerm_mssql_firewall_rule" "allow_azure" {
+  name             = "AllowAzureServices"
+  server_id        = azurerm_mssql_server.sql.id
   start_ip_address = "0.0.0.0"
   end_ip_address   = "0.0.0.0"
 }
 
-resource "azurerm_mssql_database" "dw_ventas" {
-  name                  = "dw_ventas_advent"
-  server_id             = azurerm_mssql_server.db.id
+resource "azurerm_mssql_database" "dw" {
+  name                  = "DW_APPLE"
+  server_id             = azurerm_mssql_server.sql.id
   collation             = "SQL_Latin1_General_CP1_CI_AS"
-  license_type          = "LicenseIncluded"
-  max_size_gb           = 2
   sku_name              = "S0"
+  max_size_gb           = 2
+  license_type          = "LicenseIncluded"
   enclave_type          = "VBS"
-  storage_account_type  = "Local" 
-
+  storage_account_type  = "Local"
   tags = {
-    project = "ExamenDW"
-  }
-
-  lifecycle {
-    prevent_destroy = false
+    project = "DW_APPLE"
   }
 }
 
 # -----------------------------------------------------------------------------
-# 5. AZURE DATA FACTORY (Motor ETL)
+# 5. AZURE DATA FACTORY
 # -----------------------------------------------------------------------------
 
-# Data Factory
-resource "azurerm_data_factory" "df" {
-  name                = "adf-dwventas-advent-${random_integer.suffix.result}"
+resource "azurerm_data_factory" "adf" {
+  name                = "adf-applesales-${random_integer.suffix.result}"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
 }
@@ -183,21 +142,17 @@ resource "azurerm_data_factory" "df" {
 # -----------------------------------------------------------------------------
 
 output "resource_group_name" {
-  description = "Nombre del Resource Group"
-  value       = azurerm_resource_group.rg.name
+  value = azurerm_resource_group.rg.name
 }
 
 output "storage_account_name" {
-  description = "Nombre de la Storage Account (Data Lake)"
-  value       = azurerm_storage_account.sa.name
+  value = azurerm_storage_account.sa.name
 }
 
 output "data_factory_name" {
-  description = "Nombre de la Azure Data Factory"
-  value       = azurerm_data_factory.df.name
+  value = azurerm_data_factory.adf.name
 }
 
 output "sql_server_fqdn" {
-  description = "Fully Qualified Domain Name del SQL Server"
-  value       = azurerm_mssql_server.db.fully_qualified_domain_name
+  value = azurerm_mssql_server.sql.fully_qualified_domain_name
 }

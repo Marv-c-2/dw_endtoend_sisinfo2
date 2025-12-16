@@ -1,0 +1,77 @@
+Store_ID,Store_Name,City,Country,opened
+ST-1,Apple Fifth Avenue,New York,United States,2006
+ST-2,Apple Union Square,San Francisco,United States,2005
+ST-3,Apple Michigan Avenue,Chicago,United States,2003
+ST-4,Apple The Grove,Los Angeles,United States,2007
+ST-5,'Apple SoHo',New York,United States,2010
+ST-6,Apple Grand Central,New York,United States,2015
+ST-7,Apple Beverly Center,Los Angeles,United States,2009
+ST-8,Apple Pioneer Place,Portland,United States,2012
+ST-9,"Apple Park Visitor Center',Cupertino,United States,2017
+ST-10,Apple South Coast Plaza,Costa Mesa,United States,2011
+ST-11,Apple Ala Moana,Honolulu,United States,2019
+ST-12,Apple North Michigan Avenue,Chicago,United States,2018
+ST-13,Apple Walnut Street,Philadelphia,United States,2016
+ST-14,Apple The Americana at Brand,Glendale,United States,2014
+ST-15,Apple Downtown Brooklyn,Brooklyn,United States,2013
+ST-16,Apple Regent Street,London,   United Kingdom  ,2012
+ST-17,Apple Covent Garden,London,United Kingdom,2011
+ST-17,Apple Covent Garden,London,United Kingdom,2011
+ST-18,Apple Champs-Elysees,Paris,France,20O9
+ST-19,Apple Opera,Paris,France,2008
+ST-20,Apple Kaerntner Strasse,Vienna,Austria,
+ST-21,Apple Passeig de Gracia,Barcelona,Spain,2007
+ST-22,Apple Piazza Liberty,Milan,"Italy",2006
+ST-23,Apple Via del Corso,Rome,Italy,2005
+ST-24,Apple Kurfuerstendamm,Berlin,Germany,2004
+ST-25,Apple Schildergasse,Cologne,'Germany',2003
+ST-26,Apple Leidseplein,Amsterdam,Netherlands,2002
+ST-27,Apple Rosenstrasse,Munich,Germany,2001
+ST-28,Apple Brompton Road,London,United Kingdom,2000
+ST-29,Apple Galeries Lafayette,Paris,France,1999
+ST-30,Apple Dubai Mall,Dubai,UAE,1998
+ST-31,Apple Shinjuku,Tokyo
+ST-32,Apple Omotesando,Tokyo,   Japan   ,1997
+ST-33,Apple Marunouchi,Tokyo,Japan,1996
+ST-34,Apple Fukuoka,Fukuoka,Japan,1995,
+ST-35,Apple Shanghai IFC,,China,1994
+ST-36,Apple Nanjing East,Shanghai,China,1993
+ST-37,Apple Sanlitun,'Beijing',China,1992
+ST-38,  Apple Taikoo Li ,Chengdu,China,1991
+ST-39,Apple Taipei 101,"Taipei",Taiwan,1990
+ST-40,Apple Causeway Bay,Hong Kong,China,1989
+ST-41,Apple Central World,Bangkok,Thailand,1988
+ST-42,Apple Orchard Road,Singapore,Singapore,1987
+ST-43,Apple Cotai Central,Macau,China,
+ST-44,Apple Kyoto,Kyoto,Japan,1985
+ST-45,Apple Jewel Changi Airport,Singapore,Singapore,1984
+ST-46,Apple Eaton Centre,Toronto,Canada,1983
+ST-47,Apple Rideau Centre,Ottawa,Canada,1982
+ST-48,12345,Montreal,Canada,1981
+ST-49,Apple Yorkdale,Toronto,Canada,1980
+ST-50,Apple Metrotown,Burnaby,Canada
+ST-51,Apple Sydney,Sydney,Australia
+ST-52,Apple Chadstone,Melbourne,Australia
+ST-53,Apple Brisbane,Brisbane,Australia
+ST-54,Apple Bondi,Bondi,Australia
+ST-55,Apple Highpoint,Melbourne,Australia
+ST-56,Apple Southland,Cheltenham,Australia
+ST-57,Apple Yas Mall,Abu Dhabi,UAE
+ST-58,Apple The Dubai Mall,Dubai,UAE
+ST-59,Apple Mall of the Emirates,Dubai,UAE
+ST-60,Apple Antara,Mexico City,Mexico
+ST-61,Apple Santa Fe,Mexico City,Mexico
+ST-62,Apple Via Santa Fe,Mexico City,Mexico
+ST-63,Apple Parque La Colina,Bogota,Colombia
+ST-64,Apple Andino,Bogota,Colombia
+ST-65,Apple Iconsiam,Bangkok,Thailand
+ST-66,Apple Orchard Road,Singapore,Singapore
+ST-67,Apple Chadstone,Melbourne,Australia
+ST-68,Apple Champs-Elysees,Paris,France
+ST-69,Apple The Dubai Mall,Dubai,UAE
+ST-70,Apple Gangnam,Seoul,South Korea
+ST-71,Apple Yeouido,Seoul,South Korea
+ST-72,Apple Kumamoto,Kumamoto,Japan
+ST-73,Apple Covent Garden,London,United Kingdom
+ST-74,Apple Central World,Bangkok,Thailand
+ST-75,Apple Beijing SKP,Beijing,China

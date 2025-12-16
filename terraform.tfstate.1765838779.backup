@@ -1,0 +1,108 @@
+{
+  "version": 4,
+  "terraform_version": "1.13.2",
+  "serial": 69,
+  "lineage": "1d94ee57-1091-5e74-5c51-b0c21d09f040",
+  "outputs": {
+    "data_factory_name": {
+      "value": "adf-applesales-68961",
+      "type": "string"
+    },
+    "resource_group_name": {
+      "value": "rg-apple-sales-68961",
+      "type": "string"
+    },
+    "sql_server_fqdn": {
+      "value": "sql-dwventas-advent-68961.database.windows.net",
+      "type": "string"
+    },
+    "storage_account_name": {
+      "value": "adlsapplesales68961",
+      "type": "string"
+    }
+  },
+  "resources": [
+    {
+      "mode": "managed",
+      "type": "azurerm_data_factory",
+      "name": "adf",
+      "provider": "provider[\"registry.terraform.io/hashicorp/azurerm\"]",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "customer_managed_key_id": "",
+            "customer_managed_key_identity_id": "",
+            "github_configuration": [],
+            "global_parameter": [],
+            "id": "/subscriptions/ac86c96d-8259-46d7-a6f7-b4919562089a/resourceGroups/rg-apple-sales-68961/providers/Microsoft.DataFactory/factories/adf-applesales-68961",
+            "identity": [],
+            "location": "chilecentral",
+            "managed_virtual_network_enabled": false,
+            "name": "adf-applesales-68961",
+            "public_network_enabled": true,
+            "purview_id": "",
+            "resource_group_name": "rg-apple-sales-68961",
+            "tags": null,
+            "timeouts": null,
+            "vsts_configuration": []
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxODAwMDAwMDAwMDAwLCJkZWxldGUiOjE4MDAwMDAwMDAwMDAsInJlYWQiOjMwMDAwMDAwMDAwMCwidXBkYXRlIjoxODAwMDAwMDAwMDAwfSwic2NoZW1hX3ZlcnNpb24iOiIyIn0=",
+          "dependencies": [
+            "azurerm_resource_group.rg",
+            "random_integer.suffix"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "azurerm_resource_group",
+      "name": "rg",
+      "provider": "provider[\"registry.terraform.io/hashicorp/azurerm\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "id": "/subscriptions/ac86c96d-8259-46d7-a6f7-b4919562089a/resourceGroups/rg-apple-sales-68961",
+            "location": "chilecentral",
+            "managed_by": "",
+            "name": "rg-apple-sales-68961",
+            "tags": null,
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo1NDAwMDAwMDAwMDAwLCJkZWxldGUiOjU0MDAwMDAwMDAwMDAsInJlYWQiOjMwMDAwMDAwMDAwMCwidXBkYXRlIjo1NDAwMDAwMDAwMDAwfX0=",
+          "dependencies": [
+            "random_integer.suffix"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "random_integer",
+      "name": "suffix",
+      "provider": "provider[\"registry.terraform.io/hashicorp/random\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "id": "68961",
+            "keepers": null,
+            "max": 99999,
+            "min": 10000,
+            "result": 68961,
+            "seed": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0
+        }
+      ]
+    }
+  ],
+  "check_results": null
+}

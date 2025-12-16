@@ -9,3 +9,11 @@ override.tf
 override.tf.json
 *override.tf
 *override.tf.json
+
+#Archivos de estado y configuración
+*.tfstate
+*.tfstate.backup
+terraform.tfvars
+
+# Directorio de módulos y ejecutables de proveedores (ESTO ES LO CRÍTICO)
+.terraform/

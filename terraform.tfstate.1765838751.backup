@@ -1,0 +1,333 @@
+{
+  "version": 4,
+  "terraform_version": "1.13.2",
+  "serial": 67,
+  "lineage": "1d94ee57-1091-5e74-5c51-b0c21d09f040",
+  "outputs": {
+    "data_factory_name": {
+      "value": "adf-applesales-68961",
+      "type": "string"
+    },
+    "resource_group_name": {
+      "value": "rg-apple-sales-68961",
+      "type": "string"
+    },
+    "sql_server_fqdn": {
+      "value": "sql-dwventas-advent-68961.database.windows.net",
+      "type": "string"
+    },
+    "storage_account_name": {
+      "value": "adlsapplesales68961",
+      "type": "string"
+    }
+  },
+  "resources": [
+    {
+      "mode": "managed",
+      "type": "azurerm_data_factory",
+      "name": "adf",
+      "provider": "provider[\"registry.terraform.io/hashicorp/azurerm\"]",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "customer_managed_key_id": "",
+            "customer_managed_key_identity_id": "",
+            "github_configuration": [],
+            "global_parameter": [],
+            "id": "/subscriptions/ac86c96d-8259-46d7-a6f7-b4919562089a/resourceGroups/rg-apple-sales-68961/providers/Microsoft.DataFactory/factories/adf-applesales-68961",
+            "identity": [],
+            "location": "chilecentral",
+            "managed_virtual_network_enabled": false,
+            "name": "adf-applesales-68961",
+            "public_network_enabled": true,
+            "purview_id": "",
+            "resource_group_name": "rg-apple-sales-68961",
+            "tags": null,
+            "timeouts": null,
+            "vsts_configuration": []
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjoxODAwMDAwMDAwMDAwLCJkZWxldGUiOjE4MDAwMDAwMDAwMDAsInJlYWQiOjMwMDAwMDAwMDAwMCwidXBkYXRlIjoxODAwMDAwMDAwMDAwfSwic2NoZW1hX3ZlcnNpb24iOiIyIn0=",
+          "dependencies": [
+            "azurerm_resource_group.rg",
+            "random_integer.suffix"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "azurerm_mssql_server",
+      "name": "sql",
+      "provider": "provider[\"registry.terraform.io/hashicorp/azurerm\"]",
+      "instances": [
+        {
+          "status": "tainted",
+          "schema_version": 0,
+          "attributes": {
+            "administrator_login": "adminmarvin",
+            "administrator_login_password": "Marvin2025@Sql",
+            "administrator_login_password_wo": null,
+            "administrator_login_password_wo_version": 0,
+            "azuread_administrator": [],
+            "connection_policy": "Default",
+            "fully_qualified_domain_name": "sqlserverapplesales68961.database.windows.net",
+            "id": "/subscriptions/ac86c96d-8259-46d7-a6f7-b4919562089a/resourceGroups/rg-apple-sales-68961/providers/Microsoft.Sql/servers/sqlserverapplesales68961",
+            "identity": [],
+            "location": "chilecentral",
+            "minimum_tls_version": "1.2",
+            "name": "sqlserverapplesales68961",
+            "outbound_network_restriction_enabled": false,
+            "primary_user_assigned_identity_id": "",
+            "public_network_access_enabled": true,
+            "resource_group_name": "rg-apple-sales-68961",
+            "restorable_dropped_database_ids": null,
+            "tags": null,
+            "timeouts": null,
+            "transparent_data_encryption_key_vault_key_id": "",
+            "version": "12.0"
+          },
+          "sensitive_attributes": [
+            [
+              {
+                "type": "get_attr",
+                "value": "administrator_login_password"
+              }
+            ],
+            [
+              {
+                "type": "get_attr",
+                "value": "administrator_login_password_wo"
+              }
+            ]
+          ],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozNjAwMDAwMDAwMDAwLCJkZWxldGUiOjM2MDAwMDAwMDAwMDAsInJlYWQiOjMwMDAwMDAwMDAwMCwidXBkYXRlIjozNjAwMDAwMDAwMDAwfX0=",
+          "dependencies": [
+            "azurerm_resource_group.rg",
+            "random_integer.suffix"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "azurerm_resource_group",
+      "name": "rg",
+      "provider": "provider[\"registry.terraform.io/hashicorp/azurerm\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "id": "/subscriptions/ac86c96d-8259-46d7-a6f7-b4919562089a/resourceGroups/rg-apple-sales-68961",
+            "location": "chilecentral",
+            "managed_by": "",
+            "name": "rg-apple-sales-68961",
+            "tags": null,
+            "timeouts": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo1NDAwMDAwMDAwMDAwLCJkZWxldGUiOjU0MDAwMDAwMDAwMDAsInJlYWQiOjMwMDAwMDAwMDAwMCwidXBkYXRlIjo1NDAwMDAwMDAwMDAwfX0=",
+          "dependencies": [
+            "random_integer.suffix"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "azurerm_storage_account",
+      "name": "sa",
+      "provider": "provider[\"registry.terraform.io/hashicorp/azurerm\"]",
+      "instances": [
+        {
+          "status": "tainted",
+          "schema_version": 4,
+          "attributes": {
+            "access_tier": null,
+            "account_kind": "StorageV2",
+            "account_replication_type": "LRS",
+            "account_tier": "Standard",
+            "allow_nested_items_to_be_public": true,
+            "allowed_copy_scope": null,
+            "azure_files_authentication": [],
+            "blob_properties": null,
+            "cross_tenant_replication_enabled": false,
+            "custom_domain": [],
+            "customer_managed_key": [],
+            "default_to_oauth_authentication": false,
+            "dns_endpoint_type": "Standard",
+            "edge_zone": null,
+            "https_traffic_only_enabled": true,
+            "id": "/subscriptions/ac86c96d-8259-46d7-a6f7-b4919562089a/resourceGroups/rg-apple-sales-68961/providers/Microsoft.Storage/storageAccounts/adlsapplesales68961",
+            "identity": [],
+            "immutability_policy": [],
+            "infrastructure_encryption_enabled": false,
+            "is_hns_enabled": true,
+            "large_file_share_enabled": null,
+            "local_user_enabled": true,
+            "location": "chilecentral",
+            "min_tls_version": "TLS1_2",
+            "name": "adlsapplesales68961",
+            "network_rules": null,
+            "nfsv3_enabled": false,
+            "primary_access_key": null,
+            "primary_blob_connection_string": null,
+            "primary_blob_endpoint": null,
+            "primary_blob_host": null,
+            "primary_blob_internet_endpoint": null,
+            "primary_blob_internet_host": null,
+            "primary_blob_microsoft_endpoint": null,
+            "primary_blob_microsoft_host": null,
+            "primary_connection_string": null,
+            "primary_dfs_endpoint": null,
+            "primary_dfs_host": null,
+            "primary_dfs_internet_endpoint": null,
+            "primary_dfs_internet_host": null,
+            "primary_dfs_microsoft_endpoint": null,
+            "primary_dfs_microsoft_host": null,
+            "primary_file_endpoint": null,
+            "primary_file_host": null,
+            "primary_file_internet_endpoint": null,
+            "primary_file_internet_host": null,
+            "primary_file_microsoft_endpoint": null,
+            "primary_file_microsoft_host": null,
+            "primary_location": null,
+            "primary_queue_endpoint": null,
+            "primary_queue_host": null,
+            "primary_queue_microsoft_endpoint": null,
+            "primary_queue_microsoft_host": null,
+            "primary_table_endpoint": null,
+            "primary_table_host": null,
+            "primary_table_microsoft_endpoint": null,
+            "primary_table_microsoft_host": null,
+            "primary_web_endpoint": null,
+            "primary_web_host": null,
+            "primary_web_internet_endpoint": null,
+            "primary_web_internet_host": null,
+            "primary_web_microsoft_endpoint": null,
+            "primary_web_microsoft_host": null,
+            "public_network_access_enabled": true,
+            "queue_encryption_key_type": "Service",
+            "queue_properties": null,
+            "resource_group_name": "rg-apple-sales-68961",
+            "routing": null,
+            "sas_policy": [],
+            "secondary_access_key": null,
+            "secondary_blob_connection_string": null,
+            "secondary_blob_endpoint": null,
+            "secondary_blob_host": null,
+            "secondary_blob_internet_endpoint": null,
+            "secondary_blob_internet_host": null,
+            "secondary_blob_microsoft_endpoint": null,
+            "secondary_blob_microsoft_host": null,
+            "secondary_connection_string": null,
+            "secondary_dfs_endpoint": null,
+            "secondary_dfs_host": null,
+            "secondary_dfs_internet_endpoint": null,
+            "secondary_dfs_internet_host": null,
+            "secondary_dfs_microsoft_endpoint": null,
+            "secondary_dfs_microsoft_host": null,
+            "secondary_file_endpoint": null,
+            "secondary_file_host": null,
+            "secondary_file_internet_endpoint": null,
+            "secondary_file_internet_host": null,
+            "secondary_file_microsoft_endpoint": null,
+            "secondary_file_microsoft_host": null,
+            "secondary_location": null,
+            "secondary_queue_endpoint": null,
+            "secondary_queue_host": null,
+            "secondary_queue_microsoft_endpoint": null,
+            "secondary_queue_microsoft_host": null,
+            "secondary_table_endpoint": null,
+            "secondary_table_host": null,
+            "secondary_table_microsoft_endpoint": null,
+            "secondary_table_microsoft_host": null,
+            "secondary_web_endpoint": null,
+            "secondary_web_host": null,
+            "secondary_web_internet_endpoint": null,
+            "secondary_web_internet_host": null,
+            "secondary_web_microsoft_endpoint": null,
+            "secondary_web_microsoft_host": null,
+            "sftp_enabled": false,
+            "share_properties": null,
+            "shared_access_key_enabled": true,
+            "static_website": null,
+            "table_encryption_key_type": "Service",
+            "tags": null,
+            "timeouts": null
+          },
+          "sensitive_attributes": [
+            [
+              {
+                "type": "get_attr",
+                "value": "primary_access_key"
+              }
+            ],
+            [
+              {
+                "type": "get_attr",
+                "value": "primary_blob_connection_string"
+              }
+            ],
+            [
+              {
+                "type": "get_attr",
+                "value": "primary_connection_string"
+              }
+            ],
+            [
+              {
+                "type": "get_attr",
+                "value": "secondary_access_key"
+              }
+            ],
+            [
+              {
+                "type": "get_attr",
+                "value": "secondary_blob_connection_string"
+              }
+            ],
+            [
+              {
+                "type": "get_attr",
+                "value": "secondary_connection_string"
+              }
+            ]
+          ],
+          "identity_schema_version": 0,
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjozNjAwMDAwMDAwMDAwLCJkZWxldGUiOjM2MDAwMDAwMDAwMDAsInJlYWQiOjMwMDAwMDAwMDAwMCwidXBkYXRlIjozNjAwMDAwMDAwMDAwfSwic2NoZW1hX3ZlcnNpb24iOiI0In0=",
+          "dependencies": [
+            "azurerm_resource_group.rg",
+            "random_integer.suffix"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "random_integer",
+      "name": "suffix",
+      "provider": "provider[\"registry.terraform.io/hashicorp/random\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "id": "68961",
+            "keepers": null,
+            "max": 99999,
+            "min": 10000,
+            "result": 68961,
+            "seed": null
+          },
+          "sensitive_attributes": [],
+          "identity_schema_version": 0
+        }
+      ]
+    }
+  ],
+  "check_results": null
+}
