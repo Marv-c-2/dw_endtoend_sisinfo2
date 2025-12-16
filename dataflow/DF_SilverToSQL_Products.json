@@ -40,7 +40,7 @@
 				"          notes as string,",
 				"          launch_date_normalized as date,",
 				"          product_id_clean as string,",
-				"          price_clean as string,",
+				"          price_clean as double,",
 				"          launch_date_clean as timestamp",
 				"     ),",
 				"     allowSchemaDrift: true,",

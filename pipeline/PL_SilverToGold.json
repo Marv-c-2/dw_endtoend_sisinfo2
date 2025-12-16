@@ -53,20 +53,7 @@
 			{
 				"name": "Warranty",
 				"type": "ExecuteDataFlow",
-				"dependsOn": [
-					{
-						"activity": "Products",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					},
-					{
-						"activity": "Stores",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
