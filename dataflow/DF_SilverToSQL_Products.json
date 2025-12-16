@@ -24,6 +24,10 @@
 			"transformations": [
 				{
 					"name": "select1"
+				},
+				{
+					"name": "filter1",
+					"description": "Agregue una expresión para el filtro."
 				}
 			],
 			"scriptLines": [
@@ -51,7 +55,9 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
-				"select1 sink(allowSchemaDrift: true,",
+				"select1 filter(!isNull(category) && !isNull(price)",
+				") ~> filter1",
+				"filter1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          product_id as string,",

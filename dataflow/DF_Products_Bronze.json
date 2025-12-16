@@ -23,9 +23,6 @@
 			],
 			"transformations": [
 				{
-					"name": "select1"
-				},
-				{
 					"name": "derivedColumn1"
 				},
 				{
@@ -33,6 +30,9 @@
 				},
 				{
 					"name": "derivedColumn2"
+				},
+				{
+					"name": "select1"
 				}
 			],
 			"scriptLines": [
@@ -47,6 +47,15 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> source1",
+				"derivedColumn2 derive(product_id_clean = trim(product_id),",
+				"          price_clean = iif(isNull(toFloat(replace(replace(replace(price, '$', ''), ',', ''), '.', ''))), 0.0, toFloat(replace(replace(replace(price, '$', ''), ',', ''), '.', '')))\r",
+				"\r",
+				",",
+				"          launch_date_clean = toTimestamp(launch_date_normalized, 'yyyy-MM-dd')) ~> derivedColumn1",
+				"derivedColumn1 filter(isNull(product_id_clean) == false() &&\r",
+				"isNull(price_clean) == false() &&\r",
+				"isNull(launch_date_clean) == false()) ~> filter1",
+				"select1 derive(launch_date_normalized = replace(replace(replace(launch_date, '/', '-'), '.', '-'), ' ', '-')) ~> derivedColumn2",
 				"source1 select(mapColumn(",
 				"          product_id = Product_ID,",
 				"          product_name = Product_Name,",
@@ -57,18 +66,23 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
-				"derivedColumn2 derive(product_id_clean = trim(product_id),",
-				"          price_clean = replace(replace(replace(price, '$',''),',',''),'.',''),",
-				"          launch_date_clean = toTimestamp(launch_date_normalized, 'yyyy-MM-dd')) ~> derivedColumn1",
-				"derivedColumn1 filter(isNull(product_id_clean) == false() &&\r",
-				"isNull(price_clean) == false() &&\r",
-				"isNull(launch_date_clean) == false()) ~> filter1",
-				"select1 derive(launch_date_normalized = replace(replace(replace(launch_date, '/', '-'), '.', '-'), ' ', '-')) ~> derivedColumn2",
 				"filter1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     partitionFileNames:['products_clean.csv'],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          product_id,",
+				"          product_name,",
+				"          category_id,",
+				"          launch_date,",
+				"          price,",
+				"          notes,",
+				"          launch_date_normalized,",
+				"          product_id_clean,",
+				"          price_clean,",
+				"          launch_date_clean",
+				"     ),",
 				"     partitionBy('hash', 1)) ~> sink1"
 			]
 		}
