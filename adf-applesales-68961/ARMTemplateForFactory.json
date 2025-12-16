@@ -997,6 +997,9 @@
 					"transformations": [
 						{
 							"name": "select1"
+						},
+						{
+							"name": "aggregate1"
 						}
 					],
 					"scriptLines": [
@@ -1013,7 +1016,7 @@
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     ignoreNoFilesFound: false) ~> source1",
-						"source1 select(mapColumn(",
+						"aggregate1 select(mapColumn(",
 						"          claim_id = claim_id_clean,",
 						"          claim_date = claim_date_clean,",
 						"          sale_id = sale_id_clean,",
@@ -1021,6 +1024,10 @@
 						"     ),",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true) ~> select1",
+						"source1 aggregate(groupBy(claim_id_clean),",
+						"     claim_date_clean = first(claim_date_clean),",
+						"          sale_id_clean = first(sale_id_clean),",
+						"          repair_status_clean = first(repair_status_clean)) ~> aggregate1",
 						"select1 sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     input(",
