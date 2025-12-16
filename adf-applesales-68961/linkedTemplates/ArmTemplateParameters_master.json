@@ -1,0 +1,30 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "adf-applesales-68961"
+		},
+		"LS_ADLS_connectionString": {
+			"value": ""
+		},
+		"LS_SQL_password": {
+			"value": ""
+		},
+		"LS_SQL_properties_typeProperties_server": {
+			"value": "sqlserverapplesales68961.database.windows.net"
+		},
+		"LS_SQL_properties_typeProperties_database": {
+			"value": "DW_APPLE"
+		},
+		"LS_SQL_properties_typeProperties_userName": {
+			"value": "adminmarvin"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}
