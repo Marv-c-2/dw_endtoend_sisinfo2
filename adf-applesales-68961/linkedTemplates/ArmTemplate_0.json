@@ -68,6 +68,92 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/DS_DimProduct_SQL')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_SQL",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "product_id",
+						"type": "varchar"
+					},
+					{
+						"name": "product_name",
+						"type": "varchar"
+					},
+					{
+						"name": "category_id",
+						"type": "varchar"
+					},
+					{
+						"name": "price",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "launch_date",
+						"type": "date"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "dim_product"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_SQL')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_DimStore_SQL')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_SQL",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "store_id",
+						"type": "varchar"
+					},
+					{
+						"name": "store_name",
+						"type": "varchar"
+					},
+					{
+						"name": "city",
+						"type": "varchar"
+					},
+					{
+						"name": "country",
+						"type": "varchar"
+					},
+					{
+						"name": "opened_year",
+						"type": "int",
+						"precision": 10
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "dim_store"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_SQL')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DS_FactWarranty_SQL')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -337,92 +423,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DS_DimStore_SQL')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "LS_SQL",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "store_id",
-						"type": "varchar"
-					},
-					{
-						"name": "store_name",
-						"type": "varchar"
-					},
-					{
-						"name": "city",
-						"type": "varchar"
-					},
-					{
-						"name": "country",
-						"type": "varchar"
-					},
-					{
-						"name": "opened_year",
-						"type": "int",
-						"precision": 10
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "dim_store"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_SQL')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DS_DimProduct_SQL')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "LS_SQL",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "product_id",
-						"type": "varchar"
-					},
-					{
-						"name": "product_name",
-						"type": "varchar"
-					},
-					{
-						"name": "category_id",
-						"type": "varchar"
-					},
-					{
-						"name": "price",
-						"type": "int",
-						"precision": 10
-					},
-					{
-						"name": "launch_date",
-						"type": "date"
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "dim_product"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/LS_SQL')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/DF_Products_Bronze')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -474,9 +474,7 @@
 						"     validateSchema: false,",
 						"     ignoreNoFilesFound: false) ~> source1",
 						"derivedColumn2 derive(product_id_clean = trim(product_id),",
-						"          price_clean = iif(isNull(toFloat(replace(replace(replace(price, '$', ''), ',', ''), '.', ''))), 0.0, toFloat(replace(replace(replace(price, '$', ''), ',', ''), '.', '')))\r",
-						"\r",
-						",",
+						"          price_clean = iif(isNull(toFloat(replace(replace(replace(price, '$', ''), ',', ''), '.', ''))), 0.0, toFloat(replace(replace(replace(price, '$', ''), ',', ''), '.', ''))),",
 						"          launch_date_clean = toTimestamp(launch_date_normalized, 'yyyy-MM-dd')) ~> derivedColumn1",
 						"derivedColumn1 filter(isNull(product_id_clean) == false() &&\r",
 						"isNull(price_clean) == false() &&\r",
@@ -516,161 +514,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/DS_Products_Bronze')]",
 				"[concat(variables('factoryId'), '/datasets/DS_Products_Silver')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DF_Stores_Bronze')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "DS_Stores_Bronze",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "DS_Stores_Silver",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "select1"
-						},
-						{
-							"name": "derivedColumn1"
-						},
-						{
-							"name": "filter1"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          Store_ID as string,",
-						"          Store_Name as string,",
-						"          City as string,",
-						"          Country as string,",
-						"          opened as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> source1",
-						"source1 select(mapColumn(",
-						"          store_id = Store_ID,",
-						"          store_name = Store_Name,",
-						"          city = City,",
-						"          country = Country,",
-						"          opened_year = opened",
-						"     ),",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> select1",
-						"select1 derive(store_id_clean = trim(store_id),",
-						"          store_name_clean = trim(replace(replace(store_name, \"'\", ''), '\"', '')),",
-						"          city_clean = trim(replace(replace(city, \"'\", ''), '\"', '')),",
-						"          country_clean = trim(replace(replace(country, \"'\", ''), '\"', '')),",
-						"          opened_clean = iif( isNull(opened_year) || !isInteger(opened_year, '####', 'en-US'), toInteger('0', '####', 'en-US'), toInteger(opened_year, '####', 'en-US') )) ~> derivedColumn1",
-						"derivedColumn1 filter(isNull(store_id_clean) == false() &&",
-						"isNull(store_name_clean) == false() &&",
-						"isNull(city_clean) == false() &&",
-						"isNull(country_clean) == false()) ~> filter1",
-						"filter1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     partitionFileNames:['stores_clean.csv'],",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     partitionBy('hash', 1)) ~> sink1"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/DS_Stores_Bronze')]",
-				"[concat(variables('factoryId'), '/datasets/DS_Stores_Silver')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DF_Warranty_Bronze')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "DS_Warranty_Bronze",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "DS_Warranty_Silver",
-								"type": "DatasetReference"
-							},
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "select1"
-						},
-						{
-							"name": "derivedColumn1"
-						},
-						{
-							"name": "filter1"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          claim_id as string,",
-						"          claim_date as string,",
-						"          sale_id as string,",
-						"          repair_status as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> source1",
-						"source1 select(mapColumn(",
-						"          claim_id,",
-						"          claim_date,",
-						"          sale_id,",
-						"          repair_status",
-						"     ),",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> select1",
-						"select1 derive(claim_id_clean = trim(claim_id),",
-						"          claim_date_clean = toDate(claim_date, 'yyyy-MM-dd'),",
-						"          sale_id_clean = trim(sale_id),",
-						"          repair_status_clean = trim(replace(repair_status, '\"', ''))) ~> derivedColumn1",
-						"derivedColumn1 filter(isNull(claim_id_clean) == false() &&\r",
-						"isNull(claim_date_clean) == false() &&\r",
-						"isNull(sale_id_clean) == false() &&\r",
-						"isNull(repair_status_clean) == false()) ~> filter1",
-						"filter1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     partitionFileNames:['warranty_clean.csv'],",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     partitionBy('hash', 1)) ~> sink1"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/DS_Warranty_Bronze')]",
-				"[concat(variables('factoryId'), '/datasets/DS_Warranty_Silver')]"
 			]
 		},
 		{
@@ -732,8 +575,7 @@
 						"     ),",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true) ~> select1",
-						"select1 filter(!isNull(category) && !isNull(price)",
-						") ~> filter1",
+						"select1 filter(!isNull(category) && !isNull(price)) ~> filter1",
 						"filter1 sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     input(",
@@ -942,6 +784,161 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/DS_Warranty_Silver')]",
 				"[concat(variables('factoryId'), '/datasets/DS_FactWarranty_SQL')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DF_Stores_Bronze')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DS_Stores_Bronze",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "DS_Stores_Silver",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "select1"
+						},
+						{
+							"name": "derivedColumn1"
+						},
+						{
+							"name": "filter1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          Store_ID as string,",
+						"          Store_Name as string,",
+						"          City as string,",
+						"          Country as string,",
+						"          opened as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 select(mapColumn(",
+						"          store_id = Store_ID,",
+						"          store_name = Store_Name,",
+						"          city = City,",
+						"          country = Country,",
+						"          opened_year = opened",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"select1 derive(store_id_clean = trim(store_id),",
+						"          store_name_clean = trim(replace(replace(store_name, \"'\", ''), '\"', '')),",
+						"          city_clean = trim(replace(replace(city, \"'\", ''), '\"', '')),",
+						"          country_clean = trim(replace(replace(country, \"'\", ''), '\"', '')),",
+						"          opened_clean = iif( isNull(opened_year) || !isInteger(opened_year, '####', 'en-US'), toInteger('0', '####', 'en-US'), toInteger(opened_year, '####', 'en-US') )) ~> derivedColumn1",
+						"derivedColumn1 filter(isNull(store_id_clean) == false() &&",
+						"isNull(store_name_clean) == false() &&",
+						"isNull(city_clean) == false() &&",
+						"isNull(country_clean) == false()) ~> filter1",
+						"filter1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     partitionFileNames:['stores_clean.csv'],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DS_Stores_Bronze')]",
+				"[concat(variables('factoryId'), '/datasets/DS_Stores_Silver')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DF_Warranty_Bronze')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DS_Warranty_Bronze",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "DS_Warranty_Silver",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "select1"
+						},
+						{
+							"name": "derivedColumn1"
+						},
+						{
+							"name": "filter1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          claim_id as string,",
+						"          claim_date as string,",
+						"          sale_id as string,",
+						"          repair_status as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> source1",
+						"source1 select(mapColumn(",
+						"          claim_id,",
+						"          claim_date,",
+						"          sale_id,",
+						"          repair_status",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"select1 derive(claim_id_clean = trim(claim_id),",
+						"          claim_date_clean = toDate(claim_date, 'yyyy-MM-dd'),",
+						"          sale_id_clean = trim(sale_id),",
+						"          repair_status_clean = trim(replace(repair_status, '\"', ''))) ~> derivedColumn1",
+						"derivedColumn1 filter(isNull(claim_id_clean) == false() &&\r",
+						"isNull(claim_date_clean) == false() &&\r",
+						"isNull(sale_id_clean) == false() &&\r",
+						"isNull(repair_status_clean) == false()) ~> filter1",
+						"filter1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     partitionFileNames:['warranty_clean.csv'],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DS_Warranty_Bronze')]",
+				"[concat(variables('factoryId'), '/datasets/DS_Warranty_Silver')]"
 			]
 		},
 		{
