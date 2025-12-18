@@ -70,8 +70,10 @@
 				"          price_clean as string,",
 				"          launch_date_clean as string",
 				"     ),",
+				"     partitionFileNames:['category_clean.csv'],",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sink1"
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink1"
 			]
 		}
 	}
