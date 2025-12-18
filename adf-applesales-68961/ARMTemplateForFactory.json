@@ -41,6 +41,8 @@
 					{
 						"name": "Productos",
 						"type": "ExecuteDataFlow",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [],
 						"policy": {
 							"timeout": "0.12:00:00",
@@ -71,6 +73,8 @@
 					{
 						"name": "Stores",
 						"type": "ExecuteDataFlow",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [],
 						"policy": {
 							"timeout": "0.12:00:00",
@@ -101,6 +105,8 @@
 					{
 						"name": "Warranty",
 						"type": "ExecuteDataFlow",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [],
 						"policy": {
 							"timeout": "0.12:00:00",
@@ -161,6 +167,8 @@
 					{
 						"name": "Category",
 						"type": "ExecuteDataFlow",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [],
 						"policy": {
 							"timeout": "0.12:00:00",
@@ -211,6 +219,8 @@
 					{
 						"name": "Products",
 						"type": "ExecuteDataFlow",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [
 							{
 								"activity": "Category",
@@ -304,6 +314,7 @@
 								"parameters": {},
 								"datasetParameters": {
 									"source1": {},
+									"source2": {},
 									"sink1": {}
 								}
 							},
@@ -1307,9 +1318,6 @@
 						},
 						{
 							"name": "filter1"
-						},
-						{
-							"name": "aggregate1"
 						}
 					],
 					"scriptLines": [
@@ -1329,12 +1337,7 @@
 						"          product_id = upper(trim(product_id)),",
 						"          quantity = toInteger(quantity)) ~> derivedColumn1",
 						"derivedColumn1 filter(!isNull(sale_id) && !isNull(sale_date) && !isNull(store_id) && !isNull(product_id) && quantity > 0) ~> filter1",
-						"filter1 aggregate(groupBy(sale_id),",
-						"     sale_date = first(sale_date),",
-						"          store_id = first(store_id),",
-						"          product_id = first(product_id),",
-						"          quantity = first(quantity)) ~> aggregate1",
-						"aggregate1 sink(allowSchemaDrift: true,",
+						"filter1 sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     input(",
 						"          product_id as string,",
@@ -1776,6 +1779,13 @@
 								"type": "DatasetReference"
 							},
 							"name": "source1"
+						},
+						{
+							"dataset": {
+								"referenceName": "DS_FactSales_SQL",
+								"type": "DatasetReference"
+							},
+							"name": "source2"
 						}
 					],
 					"sinks": [
@@ -1793,6 +1803,9 @@
 						},
 						{
 							"name": "aggregate1"
+						},
+						{
+							"name": "join1"
 						}
 					],
 					"scriptLines": [
@@ -1809,6 +1822,17 @@
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     ignoreNoFilesFound: false) ~> source1",
+						"source(output(",
+						"          sale_id as string,",
+						"          product_id as string,",
+						"          store_id as string,",
+						"          quantity as integer,",
+						"          sale_date as date",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> source2",
 						"aggregate1 select(mapColumn(",
 						"          claim_id = claim_id_clean,",
 						"          claim_date = claim_date_clean,",
@@ -1817,10 +1841,15 @@
 						"     ),",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true) ~> select1",
-						"source1 aggregate(groupBy(claim_id_clean),",
+						"join1 aggregate(groupBy(claim_id_clean),",
 						"     claim_date_clean = first(claim_date_clean),",
 						"          sale_id_clean = first(sale_id_clean),",
 						"          repair_status_clean = first(repair_status_clean)) ~> aggregate1",
+						"source1, source2 join(sale_id_clean == source2@sale_id,",
+						"     joinType:'inner',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> join1",
 						"select1 sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     input(",
@@ -1842,6 +1871,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/DS_Warranty_Silver')]",
+				"[concat(variables('factoryId'), '/datasets/DS_FactSales_SQL')]",
 				"[concat(variables('factoryId'), '/datasets/DS_FactWarranty_SQL')]"
 			]
 		},
