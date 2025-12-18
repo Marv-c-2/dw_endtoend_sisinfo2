@@ -2023,6 +2023,375 @@
 				"[concat(variables('factoryId'), '/datasets/DS_Warranty_Bronze')]",
 				"[concat(variables('factoryId'), '/datasets/DS_Warranty_Silver')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DF_Export_Tables')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "DS_DimProduct_SQL",
+								"type": "DatasetReference"
+							},
+							"name": "Producto"
+						},
+						{
+							"dataset": {
+								"referenceName": "DS_DimStore_SQL",
+								"type": "DatasetReference"
+							},
+							"name": "Store"
+						},
+						{
+							"dataset": {
+								"referenceName": "DS_FactWarranty_SQL",
+								"type": "DatasetReference"
+							},
+							"name": "Warranty"
+						},
+						{
+							"dataset": {
+								"referenceName": "DS_FactSales_SQL",
+								"type": "DatasetReference"
+							},
+							"name": "Sales"
+						},
+						{
+							"dataset": {
+								"referenceName": "DS_DimCategory_SQL",
+								"type": "DatasetReference"
+							},
+							"name": "Category"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "DS_CSV_DimProduct_Gold",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						},
+						{
+							"dataset": {
+								"referenceName": "DS_CSV_DimStore_Gold",
+								"type": "DatasetReference"
+							},
+							"name": "sink2"
+						},
+						{
+							"dataset": {
+								"referenceName": "DS_CSV_FactWarranty_Gold",
+								"type": "DatasetReference"
+							},
+							"name": "sink3"
+						},
+						{
+							"dataset": {
+								"referenceName": "DS_CSV_FactSales_Gold",
+								"type": "DatasetReference"
+							},
+							"name": "sink4"
+						},
+						{
+							"dataset": {
+								"referenceName": "DS_CSV_DimCategory_Gold",
+								"type": "DatasetReference"
+							},
+							"name": "sink5"
+						}
+					],
+					"transformations": [],
+					"scriptLines": [
+						"source(output(",
+						"          product_id as string,",
+						"          product_name as string,",
+						"          category_id as string,",
+						"          price as integer,",
+						"          launch_date as date",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> Producto",
+						"source(output(",
+						"          store_id as string,",
+						"          store_name as string,",
+						"          city as string,",
+						"          country as string,",
+						"          opened_year as integer",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> Store",
+						"source(output(",
+						"          claim_id as string,",
+						"          claim_date as date,",
+						"          sale_id as string,",
+						"          repair_status as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> Warranty",
+						"source(output(",
+						"          sale_id as string,",
+						"          product_id as string,",
+						"          store_id as string,",
+						"          quantity as integer,",
+						"          sale_date as date",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> Sales",
+						"source(output(",
+						"          category_id as string,",
+						"          category_name as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> Category",
+						"Producto sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     partitionFileNames:['dimProducto.csv'],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> sink1",
+						"Store sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     partitionFileNames:['dimStore.csv'],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> sink2",
+						"Warranty sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     partitionFileNames:['factWarranty.csv'],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> sink3",
+						"Sales sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     partitionFileNames:['factSales.csv'],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> sink4",
+						"Category sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     partitionFileNames:['dimCategory.csv'],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> sink5"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DS_DimProduct_SQL')]",
+				"[concat(variables('factoryId'), '/datasets/DS_DimStore_SQL')]",
+				"[concat(variables('factoryId'), '/datasets/DS_FactWarranty_SQL')]",
+				"[concat(variables('factoryId'), '/datasets/DS_FactSales_SQL')]",
+				"[concat(variables('factoryId'), '/datasets/DS_DimCategory_SQL')]",
+				"[concat(variables('factoryId'), '/datasets/DS_CSV_DimProduct_Gold')]",
+				"[concat(variables('factoryId'), '/datasets/DS_CSV_DimStore_Gold')]",
+				"[concat(variables('factoryId'), '/datasets/DS_CSV_FactWarranty_Gold')]",
+				"[concat(variables('factoryId'), '/datasets/DS_CSV_FactSales_Gold')]",
+				"[concat(variables('factoryId'), '/datasets/DS_CSV_DimCategory_Gold')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_CSV_FactSales_Gold')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_ADLS",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "gold"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_ADLS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_CSV_FactWarranty_Gold')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_ADLS",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "gold"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_ADLS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_CSV_DimProduct_Gold')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_ADLS",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "gold"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_ADLS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_CSV_DimStore_Gold')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_ADLS",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "gold"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_ADLS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_CSV_DimCategory_Gold')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_ADLS",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"container": "gold"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_ADLS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ExportGoldCSV')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ExportGoldCSV",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "DF_Export_Tables",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"Producto": {},
+									"Store": {},
+									"Warranty": {},
+									"Sales": {},
+									"Category": {},
+									"sink1": {},
+									"sink2": {},
+									"sink3": {},
+									"sink4": {},
+									"sink5": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/DF_Export_Tables')]"
+			]
 		}
 	]
 }
