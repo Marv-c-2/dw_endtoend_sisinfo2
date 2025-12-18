@@ -27,9 +27,6 @@
 				},
 				{
 					"name": "filter1"
-				},
-				{
-					"name": "aggregate1"
 				}
 			],
 			"scriptLines": [
@@ -48,14 +45,8 @@
 				"          store_id = upper(trim(store_id)),",
 				"          product_id = upper(trim(product_id)),",
 				"          quantity = toInteger(quantity)) ~> derivedColumn1",
-				"derivedColumn1 filter(!isNull(sale_id) && !isNull(sale_date) && !isNull(store_id) && !isNull(product_id) && quantity > 0",
-				") ~> filter1",
-				"filter1 aggregate(groupBy(sale_id),",
-				"     sale_date = first(sale_date),",
-				"          store_id = first(store_id),",
-				"          product_id = first(product_id),",
-				"          quantity = first(quantity)) ~> aggregate1",
-				"aggregate1 sink(allowSchemaDrift: true,",
+				"derivedColumn1 filter(!isNull(sale_id) && !isNull(sale_date) && !isNull(store_id) && !isNull(product_id) && quantity > 0) ~> filter1",
+				"filter1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          product_id as string,",
