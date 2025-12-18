@@ -1870,7 +1870,11 @@
 							"name": "sink1"
 						}
 					],
-					"transformations": [],
+					"transformations": [
+						{
+							"name": "derivedColumn1"
+						}
+					],
 					"scriptLines": [
 						"source(output(",
 						"          category_id as string,",
@@ -1879,7 +1883,8 @@
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     ignoreNoFilesFound: false) ~> source1",
-						"source1 sink(allowSchemaDrift: true,",
+						"source1 derive(category_name = iif(isNull(category_name), 'Sin categoría', category_name)) ~> derivedColumn1",
+						"derivedColumn1 sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     input(",
 						"          category_id as string,",
