@@ -1,0 +1,63 @@
+{
+	"name": "DS_Category_Silver",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_ADLS",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "silver"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "product_id",
+				"type": "String"
+			},
+			{
+				"name": "product_name",
+				"type": "String"
+			},
+			{
+				"name": "category_id",
+				"type": "String"
+			},
+			{
+				"name": "launch_date",
+				"type": "String"
+			},
+			{
+				"name": "price",
+				"type": "String"
+			},
+			{
+				"name": "notes",
+				"type": "String"
+			},
+			{
+				"name": "launch_date_normalized",
+				"type": "String"
+			},
+			{
+				"name": "product_id_clean",
+				"type": "String"
+			},
+			{
+				"name": "price_clean",
+				"type": "String"
+			},
+			{
+				"name": "launch_date_clean",
+				"type": "String"
+			}
+		]
+	}
+}

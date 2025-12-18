@@ -1,0 +1,78 @@
+{
+	"name": "DF_Category_Bronze",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_Category_Bronze",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DS_Category_Silver",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "filter1"
+				},
+				{
+					"name": "aggregate1"
+				},
+				{
+					"name": "select1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          category_id as string,",
+				"          category_name as string,",
+				"          extra_note as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source1 derive(category_id_clean = upper(trim(category_id)),",
+				"          category_name_clean = replace(replace(trim(category_name), '\"', ''), '–', '-')) ~> derivedColumn1",
+				"derivedColumn1 filter(!isNull(category_id_clean) && !isNull(category_name_clean)",
+				") ~> filter1",
+				"filter1 aggregate(groupBy(category_id_clean),",
+				"     category_name_clean = first(category_name_clean)) ~> aggregate1",
+				"aggregate1 select(mapColumn(",
+				"          category_id = category_id_clean,",
+				"          category_name = category_name_clean",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          product_id as string,",
+				"          product_name as string,",
+				"          category_id as string,",
+				"          launch_date as string,",
+				"          price as string,",
+				"          notes as string,",
+				"          launch_date_normalized as string,",
+				"          product_id_clean as string,",
+				"          price_clean as string,",
+				"          launch_date_clean as string",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
+			]
+		}
+	}
+}

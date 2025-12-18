@@ -1,0 +1,36 @@
+{
+	"name": "DS_Category_Bronze",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_ADLS",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "category.csv",
+				"container": "bronze"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "category_id",
+				"type": "String"
+			},
+			{
+				"name": "category_name",
+				"type": "String"
+			},
+			{
+				"name": "extra_note",
+				"type": "String"
+			}
+		]
+	}
+}
