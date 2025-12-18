@@ -1,0 +1,166 @@
+{
+	"name": "DF_Export_Tables",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DS_DimProduct_SQL",
+						"type": "DatasetReference"
+					},
+					"name": "Producto"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_DimStore_SQL",
+						"type": "DatasetReference"
+					},
+					"name": "Store"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_FactWarranty_SQL",
+						"type": "DatasetReference"
+					},
+					"name": "Warranty"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_FactSales_SQL",
+						"type": "DatasetReference"
+					},
+					"name": "Sales"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_DimCategory_SQL",
+						"type": "DatasetReference"
+					},
+					"name": "Category"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DS_CSV_DimProduct_Gold",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_CSV_DimStore_Gold",
+						"type": "DatasetReference"
+					},
+					"name": "sink2"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_CSV_FactWarranty_Gold",
+						"type": "DatasetReference"
+					},
+					"name": "sink3"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_CSV_FactSales_Gold",
+						"type": "DatasetReference"
+					},
+					"name": "sink4"
+				},
+				{
+					"dataset": {
+						"referenceName": "DS_CSV_DimCategory_Gold",
+						"type": "DatasetReference"
+					},
+					"name": "sink5"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          product_id as string,",
+				"          product_name as string,",
+				"          category_id as string,",
+				"          price as integer,",
+				"          launch_date as date",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> Producto",
+				"source(output(",
+				"          store_id as string,",
+				"          store_name as string,",
+				"          city as string,",
+				"          country as string,",
+				"          opened_year as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> Store",
+				"source(output(",
+				"          claim_id as string,",
+				"          claim_date as date,",
+				"          sale_id as string,",
+				"          repair_status as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> Warranty",
+				"source(output(",
+				"          sale_id as string,",
+				"          product_id as string,",
+				"          store_id as string,",
+				"          quantity as integer,",
+				"          sale_date as date",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> Sales",
+				"source(output(",
+				"          category_id as string,",
+				"          category_name as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> Category",
+				"Producto sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['dimProducto.csv'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink1",
+				"Store sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['dimStore.csv'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink2",
+				"Warranty sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['factWarranty.csv'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink3",
+				"Sales sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['factSales.csv'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink4",
+				"Category sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['dimCategory.csv'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink5"
+			]
+		}
+	}
+}
